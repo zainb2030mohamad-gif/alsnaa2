@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حلقة حفظ السنة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{
+  --green-950:#0a2620;
+  --green-900:#123c2f;
+  --green-800:#1c4a3a;
+  --green-700:#2b6350;
+  --green-600:#367a63;
+  --gold-600:#a8811e;
+  --gold-500:#c9a227;
+  --gold-400:#d9b94a;
+  --gold-200:#f0e2b0;
+  --cream:#f7f1e0;
+  --cream-2:#efe4c6;
+  --paper:#fffdf6;
+  --ink:#241f16;
+  --ink-soft:#5b5340;
+  --maroon:#7c2d2d;
+  --maroon-soft:#a8524f;
+  --shadow: 0 12px 34px rgba(10,38,32,.18);
+  --shadow-sm: 0 4px 14px rgba(10,38,32,.12);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(201,162,39,.10), transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(28,74,58,.12), transparent 45%),
+    var(--cream);
+  color:var(--ink);
+  min-height:100vh;
+}
+h1,h2,h3,.brand,.display{font-family:'Aref Ruqaa', serif;}
+button, input, textarea, select{font-family:inherit;}
+::selection{background:var(--gold-400);color:var(--green-950);}
+
+/* ---------- Header ---------- */
+header.topbar{
+  background:
+    linear-gradient(180deg, var(--green-950), var(--green-900) 70%);
+  color:var(--cream);
+  padding:22px 26px 0;
+  box-shadow: var(--shadow);
+  position:sticky; top:0; z-index:50;
+}
+.topbar-inner{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  max-width:1180px; margin:0 auto; flex-wrap:wrap;
+}
+.brand-block{display:flex; align-items:center; gap:14px;}
+.brand-mark{
+  width:52px; height:52px; border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, var(--gold-400), var(--gold-600) 70%);
+  display:flex; align-items:center; justify-content:center;
+  font-size:26px; box-shadow: inset 0 0 0 3px rgba(255,255,255,.25), 0 4px 10px rgba(0,0,0,.3);
+  flex-shrink:0;
+}
+.brand h1{margin:0; font-size:28px; color:var(--gold-200); letter-spacing:.5px;}
+.brand small{display:block; color:rgba(247,241,224,.65); font-size:13px; margin-top:2px;}
+.today-chip{
+  background:rgba(255,255,255,.08); border:1px solid rgba(201,162,39,.4);
+  color:var(--gold-200); padding:8px 16px; border-radius:999px; font-size:14px;
+}
+nav.tabs{
+  max-width:1180px; margin:16px auto 0; display:flex; gap:4px; overflow-x:auto;
+  border-bottom:1px solid rgba(201,162,39,.25); padding-bottom:0;
+}
+nav.tabs button{
+  background:none; border:none; color:rgba(247,241,224,.7);
+  padding:12px 18px; font-size:15.5px; cursor:pointer; white-space:nowrap;
+  border-bottom:3px solid transparent; transition:.2s; font-weight:500;
+}
+nav.tabs button:hover{color:var(--gold-200);}
+nav.tabs button.active{color:var(--gold-400); border-bottom-color:var(--gold-500); font-weight:700;}
+
+/* ---------- Layout ---------- */
+main{max-width:1180px; margin:0 auto; padding:28px 20px 100px;}
+.view{display:none; animation:fade .35s ease;}
+.view.active{display:block;}
+@keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+.section-head{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap;}
+.section-head h2{margin:0; font-size:26px; color:var(--green-900);}
+.section-head p{margin:4px 0 0; color:var(--ink-soft); font-size:14.5px;}
+
+.card{
+  background:var(--paper); border-radius:var(--radius); box-shadow:var(--shadow-sm);
+  border:1px solid rgba(28,74,58,.08); padding:20px;
+}
+
+.btn{
+  border:none; border-radius:999px; padding:11px 22px; font-size:15px; font-weight:700;
+  cursor:pointer; transition:.15s; display:inline-flex; align-items:center; gap:8px;
+}
+.btn-gold{background:linear-gradient(135deg, var(--gold-400), var(--gold-600)); color:var(--green-950); box-shadow:0 6px 16px rgba(201,162,39,.35);}
+.btn-gold:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(201,162,39,.45);}
+.btn-outline{background:transparent; border:1.5px solid var(--green-800); color:var(--green-800);}
+.btn-outline:hover{background:var(--green-800); color:#fff;}
+.btn-ghost{background:rgba(28,74,58,.07); color:var(--green-900);}
+.btn-danger{background:transparent; color:var(--maroon); border:1.5px solid var(--maroon-soft);}
+.btn-danger:hover{background:var(--maroon); color:#fff;}
+.btn-sm{padding:7px 14px; font-size:13px;}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+
+input[type=text], input[type=date], input[type=number], textarea, select{
+  width:100%; padding:10px 12px; border-radius:var(--radius-sm);
+  border:1.5px solid rgba(28,74,58,.18); background:#fffefb; color:var(--ink); font-size:14.5px;
+}
+input:focus, textarea:focus, select:focus{outline:none; border-color:var(--gold-500); box-shadow:0 0 0 3px rgba(201,162,39,.18);}
+label{font-size:13px; font-weight:700; color:var(--green-900); display:block; margin-bottom:5px;}
+.field{margin-bottom:12px;}
+textarea{resize:vertical; min-height:44px;}
+
+/* ---------- Home ---------- */
+.date-bar{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:20px;}
+.date-bar input[type=date]{width:auto;}
+.day-badge{padding:7px 16px; border-radius:999px; font-weight:700; font-size:14px;}
+.day-badge.daily{background:rgba(43,99,80,.12); color:var(--green-800);}
+.day-badge.cumulative{background:rgba(201,162,39,.16); color:var(--gold-600);}
+.day-badge.off{background:rgba(124,45,45,.1); color:var(--maroon);}
+
+.student-entry-card{
+  background:var(--paper); border-radius:var(--radius); box-shadow:var(--shadow-sm);
+  border:1px solid rgba(28,74,58,.08); padding:18px 20px; margin-bottom:14px;
+  border-inline-start:5px solid var(--green-700);
+}
+.student-entry-card.cumulative-mode{border-inline-start-color:var(--gold-500);}
+.se-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px;}
+.se-name{font-size:18px; font-weight:800; color:var(--green-900);}
+.se-vol{font-size:12.5px; color:var(--ink-soft); background:var(--cream-2); padding:3px 10px; border-radius:999px; margin-inline-start:8px;}
+.grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;}
+.grid2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media(max-width:680px){.grid3,.grid2{grid-template-columns:1fr;}}
+
+.toggle-review{
+  border:1.5px solid rgba(28,74,58,.2); background:#fff; color:var(--ink-soft);
+  border-radius:999px; padding:9px 16px; cursor:pointer; font-weight:700; font-size:13.5px; width:100%;
+}
+.toggle-review.on{background:var(--green-700); color:#fff; border-color:var(--green-700);}
+
+.empty-state{text-align:center; padding:50px 20px; color:var(--ink-soft);}
+.empty-state .icon{font-size:44px; margin-bottom:10px;}
+
+.sticky-action{
+  position:sticky; bottom:16px; margin-top:20px; display:flex; align-items:center;
+  justify-content:space-between; gap:14px; background:var(--paper); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:14px 20px; border:1px solid rgba(201,162,39,.3); flex-wrap:wrap;
+}
+.sticky-action span{font-size:13.5px; color:var(--ink-soft);}
+
+.toast{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--green-950); color:var(--gold-200); padding:13px 26px; border-radius:999px;
+  box-shadow:var(--shadow); font-weight:700; z-index:200; opacity:0; transition:.35s; pointer-events:none;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ---------- Students ---------- */
+.students-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:16px;}
+.student-card{
+  background:var(--paper); border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:18px;
+  border:1px solid rgba(28,74,58,.08); position:relative; overflow:hidden;
+}
+.student-card::before{
+  content:""; position:absolute; inset-inline-start:0; top:0; bottom:0; width:5px;
+  background:linear-gradient(var(--gold-400), var(--green-700));
+}
+.student-card h3{margin:0 0 4px; color:var(--green-900); font-size:19px;}
+.student-card .vol{color:var(--ink-soft); font-size:13px; margin-bottom:10px;}
+.student-stats{display:flex; gap:14px; font-size:12.5px; color:var(--ink-soft); margin-bottom:12px;}
+.student-stats b{color:var(--green-800); display:block; font-size:16px;}
+.card-actions{display:flex; gap:8px; flex-wrap:wrap;}
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(10,38,32,.55); display:flex; align-items:center;
+  justify-content:center; z-index:300; padding:20px; backdrop-filter:blur(2px);
+}
+.modal{
+  background:var(--cream); border-radius:20px; max-width:760px; width:100%; max-height:88vh;
+  overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.35); border:1px solid var(--gold-400);
+}
+.modal-head{
+  background:linear-gradient(135deg, var(--green-900), var(--green-800)); color:var(--cream);
+  padding:20px 24px; display:flex; justify-content:space-between; align-items:flex-start; gap:10px;
+  position:sticky; top:0; z-index:2;
+}
+.modal-head h3{margin:0; color:var(--gold-200); font-size:22px;}
+.modal-close{background:rgba(255,255,255,.12); border:none; color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:16px;}
+.modal-body{padding:22px 24px;}
+
+/* ---------- Tables ---------- */
+table{width:100%; border-collapse:collapse; font-size:13.5px;}
+th,td{padding:10px 10px; text-align:right; border-bottom:1px solid rgba(28,74,58,.1);}
+th{background:var(--cream-2); color:var(--green-900); font-size:12.5px; position:sticky; top:0;}
+tr:hover td{background:rgba(201,162,39,.06);}
+.table-wrap{overflow-x:auto; border-radius:var(--radius-sm); border:1px solid rgba(28,74,58,.1);}
+.pill{padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:700;}
+.pill.rev-yes{background:rgba(43,99,80,.15); color:var(--green-800);}
+.pill.rev-no{background:rgba(124,45,45,.12); color:var(--maroon);}
+.pill.type-hifz{background:rgba(43,99,80,.12); color:var(--green-800);}
+.pill.type-murajaa{background:rgba(43,99,150,.12); color:#2b5c93;}
+.pill.type-cumulative{background:rgba(201,162,39,.18); color:var(--gold-600);}
+
+.session-badge{padding:4px 12px; border-radius:999px; font-size:12px; font-weight:700;}
+.session-badge.hifz{background:rgba(43,99,80,.14); color:var(--green-800);}
+.session-badge.murajaa{background:rgba(43,99,150,.12); color:#2b5c93;}
+
+/* ---------- Filters ---------- */
+.filters-bar{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:end;}
+.filters-bar .field{margin-bottom:0; min-width:150px;}
+
+/* ---------- Stats ---------- */
+.stat-cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:22px;}
+.stat-card{background:var(--paper); border-radius:var(--radius); padding:18px; text-align:center; box-shadow:var(--shadow-sm); border:1px solid rgba(28,74,58,.08);}
+.stat-card .num{font-size:32px; font-weight:800; color:var(--green-900); font-family:'Aref Ruqaa',serif;}
+.stat-card .lbl{font-size:12.5px; color:var(--ink-soft); margin-top:4px;}
+.chart-box{background:var(--paper); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-sm); border:1px solid rgba(28,74,58,.08); margin-bottom:20px;}
+.chart-box h3{margin:0 0 14px; color:var(--green-900); font-size:17px;}
+
+/* ---------- Motivation ---------- */
+.motivation-hero{
+  background:linear-gradient(135deg, var(--green-950), var(--green-800));
+  border-radius:24px; padding:46px 32px; text-align:center; color:var(--cream);
+  position:relative; overflow:hidden; box-shadow:var(--shadow);
+}
+.motivation-hero::before{
+  content:"﴾"; position:absolute; font-size:220px; opacity:.06; top:-40px; right:-20px; font-family:serif; color:var(--gold-400);
+}
+.motivation-hero::after{
+  content:"﴿"; position:absolute; font-size:220px; opacity:.06; bottom:-60px; left:-20px; font-family:serif; color:var(--gold-400);
+}
+.motivation-quote{font-family:'Aref Ruqaa',serif; font-size:26px; line-height:1.9; color:var(--gold-200); position:relative; z-index:1; min-height:90px; display:flex; align-items:center; justify-content:center;}
+.motivation-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; margin-top:24px;}
+.motivation-card{background:var(--paper); border-radius:var(--radius-sm); padding:16px; font-size:14px; color:var(--ink); border-inline-start:4px solid var(--gold-500); box-shadow:var(--shadow-sm);}
+
+/* ---------- Settings ---------- */
+.settings-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+@media(max-width:760px){.settings-grid{grid-template-columns:1fr;}}
+.danger-zone{border:1.5px dashed var(--maroon-soft); border-radius:var(--radius); padding:18px; margin-top:14px;}
+.danger-zone h4{color:var(--maroon); margin:0 0 8px;}
+
+footer.app-footer{text-align:center; padding:26px; color:var(--ink-soft); font-size:12.5px;}
+
+/* ---------- PDF report pages (used only while generating PDF files) ---------- */
+.pdf-page{background:#fff; position:relative; overflow:hidden; direction:rtl; box-sizing:border-box; padding:38px; font-family:'Tajawal',sans-serif; color:#241f16;}
+.pdf-report{direction:rtl; font-family:'Tajawal',sans-serif; color:#241f16; font-size:13px; line-height:1.65; display:flow-root;}
+.pdf-block{padding-bottom:12px;}
+.pdf-head{border-bottom:3px solid #c9a227; margin-bottom:12px; padding-bottom:10px;}
+.pdf-head-top{display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#5b5340;}
+.pdf-circle{font-family:'Aref Ruqaa',serif; font-size:21px; color:#1c4a3a; font-weight:700;}
+.pdf-head h1{margin:6px 0 2px; font-size:28px; color:#123c2f; font-family:'Aref Ruqaa',serif; font-weight:700;}
+.pdf-sub{font-size:13px; color:#5b5340;}
+.pdf-mini{display:flex; justify-content:space-between; font-size:11.5px; color:#5b5340; border-bottom:1.5px solid #c9a227; padding-bottom:6px; margin-bottom:12px;}
+.pdf-h2{font-size:16px; font-weight:800; color:#123c2f; border-inline-start:4px solid #c9a227; padding-inline-start:8px;}
+.pdf-tiles{display:flex; gap:8px;}
+.pdf-tile{flex:1 1 0; border:1px solid #e3d9b8; background:#fbf6e6; border-radius:8px; padding:8px 4px; text-align:center;}
+.pdf-tile b{display:block; font-size:21px; color:#123c2f; font-family:'Aref Ruqaa',serif; font-weight:700; line-height:1.4;}
+.pdf-tile span{font-size:10.5px; color:#5b5340;}
+.pdf-table{width:100%; border-collapse:collapse; table-layout:fixed; font-size:11.5px; margin-bottom:12px;}
+.pdf-table th{background:#1c4a3a; color:#fff; padding:7px 6px; text-align:right; font-weight:700;}
+.pdf-table td{padding:6px; border-bottom:1px solid #e6dfc7; vertical-align:top; text-align:right; overflow-wrap:anywhere;}
+.pdf-table tbody tr:nth-child(even) td{background:#fbf9f1;}
+.pdf-tag{display:inline-block; padding:1px 9px; border-radius:999px; font-size:10.5px; font-weight:700;}
+.pdf-tag.hifz{background:#dcebe3; color:#1c4a3a;}
+.pdf-tag.mur{background:#dce6f3; color:#2b5c93;}
+.pdf-tag.cum{background:#f5e9c2; color:#8a6a10;}
+.pdf-range{font-size:10.5px; color:#6b6450;}
+.pdf-muted{color:#9a927a;}
+.pdf-foot-line{position:absolute; left:38px; right:38px; bottom:16px; display:flex; justify-content:space-between; font-size:10.5px; color:#8a826c; border-top:1px solid #e6dfc7; padding-top:6px;}
+
+/* ---------- Instagram link ---------- */
+.top-actions{display:flex; align-items:center; gap:10px;}
+.insta-icon{width:40px; height:40px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center;
+  color:var(--gold-200); border:1px solid rgba(201,162,39,.4); background:rgba(255,255,255,.08); transition:.2s; text-decoration:none;}
+.insta-icon:hover{background:linear-gradient(45deg,#f09433,#dc2743,#bc1888); color:#fff; border-color:transparent; transform:translateY(-1px);}
+footer.app-footer{display:flex; flex-direction:column; align-items:center; gap:14px;}
+.insta-card{display:inline-flex; align-items:center; gap:12px; padding:10px 18px 10px 22px; border-radius:999px; text-decoration:none;
+  background:var(--paper); border:1px solid rgba(201,162,39,.5); box-shadow:var(--shadow-sm); color:var(--green-900); transition:.2s;}
+.insta-card:hover{transform:translateY(-2px); box-shadow:var(--shadow);}
+.insta-badge{width:38px; height:38px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; color:#fff;
+  background:linear-gradient(45deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); flex-shrink:0;}
+.insta-text{display:flex; flex-direction:column; text-align:right; line-height:1.4;}
+.insta-text b{font-family:'Aref Ruqaa',serif; font-size:17px; color:var(--green-900);}
+.insta-text small{font-size:12px; color:var(--ink-soft); direction:rtl;}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand-block">
+      <div class="brand-mark">📖</div>
+      <div class="brand">
+        <h1 id="circleNameDisplay">حلقة حفظ السنة</h1>
+        <small id="circleYearDisplay">متابعة يومية لحفظ الطالبات ومراجعتهن</small>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div class="today-chip" id="todayChip">—</div>
+      <a class="insta-icon" href="https://www.instagram.com/aldurr.pro/" target="_blank" rel="noopener noreferrer" title="الدر المنثور على إنستغرام" aria-label="صفحة الدر المنثور على إنستغرام"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+    </div>
+  </div>
+  <nav class="tabs" id="tabsNav">
+    <button data-view="home" class="active">🏠 الرئيسية</button>
+    <button data-view="students">👩‍🎓 الطالبات</button>
+    <button data-view="log">📜 سجل الحلقة</button>
+    <button data-view="stats">📊 الإحصائيات</button>
+    <button data-view="motivation">🌿 كلمات تُعينك</button>
+    <button data-view="settings">⚙️ الإعدادات</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ HOME ============ -->
+  <section class="view active" id="view-home">
+    <div class="section-head">
+      <div>
+        <h2>إنجاز اليوم</h2>
+        <p>سجّلي ما سمعتِه من كل طالبة اليوم، وعند الانتهاء اضغطي "أرشفة اليوم" لتُحفظ في ملف كل طالبة وتُفرَّغ الصفحة ليوم جديد.</p>
+      </div>
+    </div>
+
+    <div class="date-bar">
+      <div class="field" style="margin-bottom:0;">
+        <label>التاريخ</label>
+        <input type="date" id="homeDateInput">
+      </div>
+      <span class="day-badge" id="dayBadge">—</span>
+      <button class="btn btn-outline btn-sm" id="homePdfBtn" type="button">📄 تقرير اليوم PDF</button>
+    </div>
+
+    <div id="homeContent"></div>
+
+    <div class="sticky-action" id="homeActionBar" style="display:none;">
+      <span id="homeActionHint">سيتم حفظ البيانات في ملفات الطالبات وتفريغ هذه الصفحة.</span>
+      <button class="btn btn-gold" id="archiveBtn">✅ أرشفة اليوم</button>
+    </div>
+  </section>
+
+  <!-- ============ STUDENTS ============ -->
+  <section class="view" id="view-students">
+    <div class="section-head">
+      <div>
+        <h2>الطالبات</h2>
+        <p>أضيفي طالبات الحلقة، وتابعي ملف كل طالبة على حدة.</p>
+      </div>
+      <button class="btn btn-gold" id="addStudentBtn">+ إضافة طالبة</button>
+    </div>
+    <div id="studentsGrid" class="students-grid"></div>
+  </section>
+
+  <!-- ============ CIRCLE LOG ============ -->
+  <section class="view" id="view-log">
+    <div class="section-head">
+      <div>
+        <h2>سجل الحلقة العام</h2>
+        <p>سجل شامل لكل ما تم تسجيله لجميع الطالبات.</p>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn btn-gold btn-sm" id="logPdfBtn" type="button">📄 تصدير PDF</button>
+        <button class="btn btn-outline btn-sm" id="exportCsvBtn">⬇️ تصدير CSV</button>
+      </div>
+    </div>
+    <div class="filters-bar card">
+      <div class="field">
+        <label>الطالبة</label>
+        <select id="logFilterStudent"><option value="">الكل</option></select>
+      </div>
+      <div class="field">
+        <label>النوع</label>
+        <select id="logFilterType">
+          <option value="">الكل</option>
+          <option value="hifz">حفظ</option>
+          <option value="murajaa">مراجعة عادية</option>
+          <option value="cumulative">مراجعة تراكمية</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>من تاريخ</label>
+        <input type="date" id="logFilterFrom">
+      </div>
+      <div class="field">
+        <label>إلى تاريخ</label>
+        <input type="date" id="logFilterTo">
+      </div>
+      <button class="btn btn-ghost btn-sm" id="logResetFilters">إعادة تعيين</button>
+    </div>
+    <div class="table-wrap card" style="padding:0;">
+      <table id="logTable">
+        <thead><tr><th>التاريخ</th><th>اليوم</th><th>الطالبة</th><th>النوع</th><th>التفاصيل</th><th>راجعت</th><th>ملاحظات</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="view" id="view-stats">
+    <div class="section-head">
+      <div><h2>الإحصائيات</h2><p>نظرة عامة على مسيرة الحلقة.</p></div>
+      <button class="btn btn-gold btn-sm" id="statsPdfBtn" type="button">📄 تصدير PDF</button>
+    </div>
+    <div class="stat-cards" id="statCards"></div>
+    <div class="chart-box"><h3>عدد الجلسات لكل طالبة</h3><canvas id="chartByStudent" height="90"></canvas></div>
+    <div class="chart-box"><h3>توزيع الجلسات حسب اليوم</h3><canvas id="chartByDay" height="90"></canvas></div>
+  </section>
+
+  <!-- ============ MOTIVATION ============ -->
+  <section class="view" id="view-motivation">
+    <div class="section-head">
+      <div><h2>كلمات تُعينك</h2><p>لتذكيرك بأجر ما تقومين به في تعليم الحديث ومتابعة الحافظات.</p></div>
+    </div>
+    <div class="motivation-hero">
+      <div class="motivation-quote" id="motivationQuote">—</div>
+      <button class="btn btn-gold" id="nextQuoteBtn" style="margin-top:22px;">كلمة أخرى 🌿</button>
+    </div>
+    <div class="motivation-grid" id="motivationGrid"></div>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section class="view" id="view-settings">
+    <div class="section-head"><div><h2>الإعدادات</h2><p>خصّصي بيانات الحلقة، واحتفظي بنسخة احتياطية من بياناتك.</p></div></div>
+    <div class="settings-grid">
+      <div class="card">
+        <h3 style="margin-top:0; color:var(--green-900);">بيانات الحلقة</h3>
+        <div class="field"><label>اسم الحلقة</label><input type="text" id="settingCircleName"></div>
+        <div class="field"><label>السنة / الموسم</label><input type="text" id="settingCircleYear" placeholder="مثال: 1447هـ"></div>
+        <button class="btn btn-gold" id="saveSettingsBtn">حفظ</button>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0; color:var(--green-900);">النسخ الاحتياطي</h3>
+        <p style="font-size:13.5px; color:var(--ink-soft);">جميع البيانات محفوظة في هذا المتصفح فقط. يُنصح بأخذ نسخة احتياطية دورياً. وتقدرين تحفظين أي تقرير كملف PDF من الأزرار المخصصة.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-outline" id="exportBackupBtn">⬇️ تصدير نسخة احتياطية</button>
+          <label class="btn btn-outline" style="cursor:pointer;">⬆️ استيراد نسخة
+            <input type="file" id="importBackupInput" accept="application/json" style="display:none;">
+          </label>
+        </div>
+        <button class="btn btn-gold" id="fullPdfBtn" type="button" style="margin-top:14px;">📄 تقرير شامل PDF (كل الطالبات والسجل)</button>
+        <div class="danger-zone">
+          <h4>منطقة الخطر</h4>
+          <p style="font-size:13px; color:var(--ink-soft); margin-top:0;">حذف جميع بيانات الحلقة نهائياً من هذا الجهاز.</p>
+          <button class="btn btn-danger btn-sm" id="resetAllBtn">تفريغ كل البيانات</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <div>جعله الله في ميزان حسناتكِ</div>
+  <a class="insta-card" href="https://www.instagram.com/aldurr.pro/" target="_blank" rel="noopener noreferrer">
+    <span class="insta-badge"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></span>
+    <span class="insta-text"><b>الدر المنثور</b><small>تابعينا على إنستغرام · @aldurr.pro</small></span>
+  </a>
+</footer>
+<div id="toast" class="toast"></div>
+
+<script>
+/* ================= DATA LAYER ================= */
+const LS = {
+  students: 'halqa_students',
+  entries: 'halqa_entries',
+  drafts: 'halqa_drafts',
+  settings: 'halqa_settings'
+};
+function load(key, fallback){ try{ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }catch(e){ return fallback; } }
+function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+let students = load(LS.students, []);
+let entries  = load(LS.entries, []);
+let drafts   = load(LS.drafts, {});     // { [dateISO]: { [studentId]: {...fields} } }
+let settings = load(LS.settings, { circleName:'حلقة حفظ السنة', circleYear:'' });
+
+function persistStudents(){ save(LS.students, students); }
+function persistEntries(){ save(LS.entries, entries); }
+function persistDrafts(){ save(LS.drafts, drafts); }
+function persistSettings(){ save(LS.settings, settings); }
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+/* ================= DATE HELPERS ================= */
+const DAY_NAMES = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+function todayISO(){ return fmtDate(new Date()); }
+function fmtDate(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function dateFromISO(iso){ const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d); }
+function dayNameOf(iso){ return DAY_NAMES[dateFromISO(iso).getDay()]; }
+function dayTypeOf(iso){
+  const dow = dateFromISO(iso).getDay(); // 0 Sun ... 6 Sat
+  if(dow>=0 && dow<=3) return 'daily';
+  if(dow===4) return 'cumulative';
+  return 'off';
+}
+// On regular days (Sun-Wed) a student only takes NEW memorization on her one assigned weekly day;
+// every other regular day for her is a normal review (murajaa) day.
+function sessionTypeFor(student, iso){
+  if(student.track==='murajaa') return 'murajaa';
+  return dayNameOf(iso)===student.hifzDay ? 'hifz' : 'murajaa';
+}
+
+/* ================= TOAST ================= */
+let toastTimer=null;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+/* ================= NAV ================= */
+document.getElementById('tabsNav').addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-view]');
+  if(!btn) return;
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+btn.dataset.view).classList.add('active');
+  if(btn.dataset.view==='students') renderStudents();
+  if(btn.dataset.view==='log') renderLog();
+  if(btn.dataset.view==='stats') renderStats();
+  if(btn.dataset.view==='motivation') showRandomQuote();
+});
+
+/* ================= HEADER / SETTINGS ================= */
+function applySettingsToHeader(){
+  document.getElementById('circleNameDisplay').textContent = settings.circleName || 'حلقة حفظ السنة';
+  document.getElementById('circleYearDisplay').textContent = settings.circleYear ? `الموسم: ${settings.circleYear}` : 'متابعة يومية لحفظ الطالبات ومراجعتهن';
+  document.title = settings.circleName || 'حلقة حفظ السنة';
+  document.getElementById('settingCircleName').value = settings.circleName || '';
+  document.getElementById('settingCircleYear').value = settings.circleYear || '';
+}
+document.getElementById('saveSettingsBtn').addEventListener('click', ()=>{
+  settings.circleName = document.getElementById('settingCircleName').value.trim() || 'حلقة حفظ السنة';
+  settings.circleYear = document.getElementById('settingCircleYear').value.trim();
+  persistSettings();
+  applySettingsToHeader();
+  toast('تم حفظ الإعدادات ✓');
+});
+
+document.getElementById('exportBackupBtn').addEventListener('click', ()=>{
+  const data = { students, entries, drafts, settings, exportedAt:new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `نسخة-احتياطية-${todayISO()}.json`;
+  a.click();
+});
+document.getElementById('importBackupInput').addEventListener('change', e=>{
+  const file = e.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      if(!confirm('سيتم استبدال البيانات الحالية بالكامل بالنسخة المستوردة. هل أنتِ متأكدة؟')) return;
+      students = data.students || []; entries = data.entries || [];
+      drafts = data.drafts || {}; settings = data.settings || settings;
+      persistStudents(); persistEntries(); persistDrafts(); persistSettings();
+      applySettingsToHeader(); renderHome(); renderStudents(); renderLog(); renderStats();
+      toast('تم استيراد النسخة الاحتياطية ✓');
+    }catch(err){ alert('تعذّرت قراءة الملف، تأكدي أنه نسخة احتياطية صحيحة.'); }
+  };
+  reader.readAsText(file);
+});
+document.getElementById('resetAllBtn').addEventListener('click', ()=>{
+  if(!confirm('سيتم حذف جميع الطالبات والسجلات نهائياً من هذا الجهاز. هذا الإجراء لا يمكن التراجع عنه. متابعة؟')) return;
+  if(!confirm('تأكيد أخير: هل تريدين تفريغ كل البيانات فعلاً؟')) return;
+  students=[]; entries=[]; drafts={};
+  persistStudents(); persistEntries(); persistDrafts();
+  renderHome(); renderStudents(); renderLog(); renderStats();
+  toast('تم تفريغ جميع البيانات');
+});
+
+/* ================= HOME ================= */
+const homeDateInput = document.getElementById('homeDateInput');
+homeDateInput.value = todayISO();
+homeDateInput.addEventListener('change', renderHome);
+
+function currentHomeDate(){ return homeDateInput.value || todayISO(); }
+
+function renderHome(){
+  const iso = currentHomeDate();
+  const type = dayTypeOf(iso);
+  const badge = document.getElementById('dayBadge');
+  badge.textContent = `${dayNameOf(iso)} — ${type==='daily'?'يوم تسميع':type==='cumulative'?'يوم مراجعة تراكمية':'لا يوجد دوام'}`;
+  badge.className = 'day-badge ' + type;
+
+  const content = document.getElementById('homeContent');
+  const actionBar = document.getElementById('homeActionBar');
+  content.innerHTML = '';
+
+  if(type==='off'){
+    content.innerHTML = `<div class="empty-state card"><div class="icon">🌙</div><p>لا يوجد دوام في هذا اليوم (الدوام من الأحد إلى الخميس).<br>يمكنكِ اختيار تاريخ آخر لتسجيل بيانات متأخرة إن رغبتِ.</p></div>`;
+    actionBar.style.display='none';
+    return;
+  }
+  if(students.length===0){
+    content.innerHTML = `<div class="empty-state card"><div class="icon">👩‍🎓</div><p>لا يوجد طالبات مضافات بعد.<br>أضيفي الطالبات من تبويب "الطالبات" أولاً.</p></div>`;
+    actionBar.style.display='none';
+    return;
+  }
+
+  if(!drafts[iso]) drafts[iso] = {};
+  const dayDraft = drafts[iso];
+
+  students.forEach(st=>{
+    const existing = entries.find(e=>e.studentId===st.id && e.date===iso);
+    const d = dayDraft[st.id] || (existing ? {...existing} : {});
+    const card = document.createElement('div');
+    card.className = 'student-entry-card' + (type==='cumulative' ? ' cumulative-mode':'');
+    card.dataset.studentId = st.id;
+
+    if(type==='daily'){
+      const sType = sessionTypeFor(st, iso);
+      const isHifz = sType==='hifz';
+      card.innerHTML = `
+        <div class="se-head">
+          <div><span class="se-name">${escapeHtml(st.name)}</span><span class="se-vol">${escapeHtml(st.volume||'—')}</span>
+            <span class="session-badge ${sType}" style="margin-inline-start:8px;">${isHifz?'📖 يوم حفظ':'🔁 مراجعة'}</span>
+          </div>
+          ${isHifz ? `<button type="button" class="toggle-review ${d.reviewed?'on':''}" data-field="reviewed" style="width:auto;">${d.reviewed?'✓ راجعت المحفوظ السابق':'لم تراجع المحفوظ السابق'}</button>` : ''}
+        </div>
+        <div class="grid3">
+          <div class="field"><label>${isHifz?'ماذا سمعتِ (حفظ جديد)':'ماذا راجعت'}</label><input type="text" data-field="heard" value="${escapeAttr(d.heard||'')}" placeholder="${isHifz?'مثال: كتاب الطهارة':'مثال: مراجعة كتاب الطهارة'}"></div>
+          <div class="field"><label>من</label><input type="text" data-field="from" value="${escapeAttr(d.from||'')}" placeholder="بداية المقطع"></div>
+          <div class="field"><label>إلى</label><input type="text" data-field="to" value="${escapeAttr(d.to||'')}" placeholder="نهاية المقطع"></div>
+        </div>
+        <div class="field" style="margin-bottom:0;"><label>ملاحظات</label><textarea data-field="notes" rows="2" placeholder="أي ملاحظة تخص اليوم">${escapeHtml(d.notes||'')}</textarea></div>
+      `;
+    } else {
+      card.innerHTML = `
+        <div class="se-head">
+          <div><span class="se-name">${escapeHtml(st.name)}</span><span class="se-vol">${escapeHtml(st.volume||'—')}</span></div>
+        </div>
+        <div class="field"><label>المراجعة التراكمية</label><textarea data-field="cumulativeReview" rows="2" placeholder="ما الذي تمت مراجعته تراكمياً هذا الأسبوع">${escapeHtml(d.cumulativeReview||'')}</textarea></div>
+        <div class="field" style="margin-bottom:0;"><label>ملاحظات</label><textarea data-field="notes" rows="2" placeholder="أي ملاحظة تخص اليوم">${escapeHtml(d.notes||'')}</textarea></div>
+      `;
+    }
+    content.appendChild(card);
+
+    // wire inputs
+    card.querySelectorAll('[data-field]').forEach(inp=>{
+      if(inp.tagName==='BUTTON'){
+        inp.addEventListener('click', ()=>{
+          const cur = !!dayDraft[st.id]?.reviewed;
+          if(!dayDraft[st.id]) dayDraft[st.id]={};
+          dayDraft[st.id].reviewed = !cur;
+          inp.classList.toggle('on', !cur);
+          inp.textContent = !cur ? '✓ راجعت' : 'لم تراجع';
+          persistDrafts();
+        });
+      } else {
+        inp.addEventListener('input', ()=>{
+          if(!dayDraft[st.id]) dayDraft[st.id]={};
+          dayDraft[st.id][inp.dataset.field] = inp.value;
+          persistDrafts();
+        });
+      }
+    });
+  });
+
+  actionBar.style.display = 'flex';
+  document.getElementById('homeActionHint').textContent =
+    `سيتم حفظ بيانات ${students.length} طالبة في ملفاتهن، وستُفرَّغ هذه الصفحة تلقائياً.`;
+}
+
+document.getElementById('archiveBtn').addEventListener('click', ()=>{
+  const iso = currentHomeDate();
+  const type = dayTypeOf(iso);
+  if(type==='off') return;
+  const dayDraft = drafts[iso] || {};
+  let count=0;
+  students.forEach(st=>{
+    const d = dayDraft[st.id];
+    const hasContent = d && (type==='daily'
+      ? (d.heard||d.from||d.to||d.notes||d.reviewed)
+      : (d.cumulativeReview||d.notes));
+    if(!hasContent) return;
+    count++;
+    const sType = type==='daily' ? sessionTypeFor(st, iso) : null;
+    const idx = entries.findIndex(e=>e.studentId===st.id && e.date===iso);
+    const rec = { id: idx>=0?entries[idx].id:uid(), studentId:st.id, date:iso, dayType:type, sessionType:sType,
+      heard:d.heard||'', from:d.from||'', to:d.to||'', reviewed: (sType==='hifz') ? !!d.reviewed : false,
+      cumulativeReview:d.cumulativeReview||'', notes:d.notes||'' };
+    if(idx>=0) entries[idx]=rec; else entries.push(rec);
+  });
+  persistEntries();
+  delete drafts[iso];
+  persistDrafts();
+  renderHome();
+  toast(count>0 ? `تم حفظ إنجاز ${count} طالبة في ملفاتهن ✅` : 'لا توجد بيانات لحفظها');
+});
+
+/* ================= STUDENTS ================= */
+document.getElementById('addStudentBtn').addEventListener('click', ()=> openStudentForm());
+
+function openStudentForm(existing){
+  const isEdit = !!existing;
+  const overlay = document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal" style="max-width:460px;">
+      <div class="modal-head"><h3>${isEdit?'تعديل بيانات الطالبة':'إضافة طالبة جديدة'}</h3><button class="modal-close">✕</button></div>
+      <div class="modal-body">
+        <div class="field"><label>اسم الطالبة</label><input type="text" id="fName" value="${isEdit?escapeAttr(existing.name):''}" placeholder="اسم الطالبة"></div>
+        <div class="field"><label>اسم المجلد / الكتاب الذي تحفظ منه</label><input type="text" id="fVolume" value="${isEdit?escapeAttr(existing.volume||''):''}" placeholder="مثال: المجلد الثاني"></div>
+        <div class="field">
+          <label>مسار الطالبة</label>
+          <select id="fTrack">
+            <option value="hifz" ${(!isEdit || existing.track==='hifz')?'selected':''}>حفظ (لسا عم تحفظ جديد)</option>
+            <option value="murajaa" ${(isEdit && existing.track==='murajaa')?'selected':''}>مراجعة فقط (خلصت الحفظ)</option>
+          </select>
+        </div>
+        <div class="field" id="fHifzDayWrap">
+          <label>يوم الحفظ الأسبوعي (اليوم اللي بتاخد فيه حفظ جديد، وباقي الأيام مراجعة)</label>
+          <select id="fHifzDay">
+            ${['الأحد','الاثنين','الثلاثاء','الأربعاء'].map(d=>`<option value="${d}" ${(isEdit && existing.hifzDay===d)?'selected':''}>${d}</option>`).join('')}
+          </select>
+        </div>
+        <button class="btn btn-gold" id="fSave" style="width:100%;">${isEdit?'حفظ التعديلات':'إضافة الطالبة'}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('.modal-close').addEventListener('click', ()=>overlay.remove());
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+
+  const trackSel = overlay.querySelector('#fTrack');
+  const hifzDayWrap = overlay.querySelector('#fHifzDayWrap');
+  function syncHifzDayVisibility(){ hifzDayWrap.style.display = trackSel.value==='hifz' ? 'block' : 'none'; }
+  trackSel.addEventListener('change', syncHifzDayVisibility);
+  syncHifzDayVisibility();
+
+  overlay.querySelector('#fSave').addEventListener('click', ()=>{
+    const name = overlay.querySelector('#fName').value.trim();
+    const volume = overlay.querySelector('#fVolume').value.trim();
+    const track = trackSel.value;
+    const hifzDay = overlay.querySelector('#fHifzDay').value;
+    if(!name){ toast('يرجى إدخال اسم الطالبة'); return; }
+    if(isEdit){ existing.name=name; existing.volume=volume; existing.track=track; existing.hifzDay=hifzDay; }
+    else { students.push({id:uid(), name, volume, track, hifzDay, createdAt:todayISO()}); }
+    persistStudents();
+    overlay.remove();
+    renderStudents(); renderHome();
+    toast(isEdit?'تم تعديل بيانات الطالبة ✓':'تمت إضافة الطالبة ✓');
+  });
+}
+
+function renderStudents(){
+  const grid = document.getElementById('studentsGrid');
+  if(students.length===0){
+    grid.innerHTML = `<div class="empty-state card" style="grid-column:1/-1;"><div class="icon">👩‍🎓</div><p>لم تتم إضافة أي طالبة بعد.</p></div>`;
+    return;
+  }
+  grid.innerHTML='';
+  students.forEach(st=>{
+    const stEntries = entries.filter(e=>e.studentId===st.id);
+    const last = stEntries.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+    const card = document.createElement('div');
+    card.className='student-card';
+    card.innerHTML = `
+      <h3>${escapeHtml(st.name)}</h3>
+      <div class="vol">📖 ${escapeHtml(st.volume||'—')}</div>
+      <div class="student-stats">
+        <div><b>${stEntries.length}</b>جلسة مسجّلة</div>
+        <div><b>${last? formatArabicDate(last.date):'—'}</b>آخر تسجيل</div>
+      </div>
+      <div class="card-actions">
+        <button class="btn btn-gold btn-sm" data-act="profile">عرض الملف</button>
+        <button class="btn btn-ghost btn-sm" data-act="edit">تعديل</button>
+        <button class="btn btn-danger btn-sm" data-act="delete">حذف</button>
+      </div>`;
+    card.querySelector('[data-act=profile]').addEventListener('click', ()=>openStudentProfile(st));
+    card.querySelector('[data-act=edit]').addEventListener('click', ()=>openStudentForm(st));
+    card.querySelector('[data-act=delete]').addEventListener('click', ()=>{
+      if(!confirm(`سيتم حذف الطالبة "${st.name}" وكل سجلاتها نهائياً. متابعة؟`)) return;
+      students = students.filter(s=>s.id!==st.id);
+      entries = entries.filter(e=>e.studentId!==st.id);
+      persistStudents(); persistEntries();
+      renderStudents(); renderHome();
+      toast('تم حذف الطالبة');
+    });
+    grid.appendChild(card);
+  });
+}
+
+function openStudentProfile(st){
+  const overlay = document.createElement('div');
+  overlay.className='modal-overlay';
+  const stEntries = entries.filter(e=>e.studentId===st.id).sort((a,b)=>b.date.localeCompare(a.date));
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-head"><h3>ملف الطالبة: ${escapeHtml(st.name)}</h3><button class="modal-close">✕</button></div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+          <p style="color:var(--ink-soft); margin:0;">📖 ${escapeHtml(st.volume||'—')} &nbsp;•&nbsp; ${stEntries.length} جلسة مسجّلة</p>
+          <button class="btn btn-gold btn-sm" id="profilePdfBtn" type="button">📄 تصدير ملف الطالبة PDF</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>التاريخ</th><th>اليوم</th><th>النوع</th><th>التفاصيل</th><th>راجعت</th><th>ملاحظات</th><th></th></tr></thead>
+            <tbody id="profileRows"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.querySelector('.modal-close').addEventListener('click', ()=>overlay.remove());
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) overlay.remove(); });
+
+  overlay.querySelector('#profilePdfBtn').addEventListener('click', ()=>exportStudentPdf(st));
+  const tbody = overlay.querySelector('#profileRows');
+  if(stEntries.length===0){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--ink-soft); padding:20px;">لا توجد سجلات بعد</td></tr>`;
+  } else {
+    stEntries.forEach(en=>{
+      const tr = document.createElement('tr');
+      const details = en.dayType==='daily' ? `${escapeHtml(en.heard||'—')} (${escapeHtml(en.from||'')} → ${escapeHtml(en.to||'')})` : escapeHtml(en.cumulativeReview||'—');
+      tr.innerHTML = `
+        <td>${formatArabicDate(en.date)}</td>
+        <td>${dayNameOf(en.date)}</td>
+        <td><span class="pill ${sessionPillClass(en)}">${sessionLabel(en)}</span></td>
+        <td>${details}</td>
+        <td>${(en.dayType==='daily' && en.sessionType==='hifz') ? `<span class="pill ${en.reviewed?'rev-yes':'rev-no'}">${en.reviewed?'نعم':'لا'}</span>` : '—'}</td>
+        <td>${escapeHtml(en.notes||'—')}</td>
+        <td><button class="btn btn-danger btn-sm" data-del="${en.id}">حذف</button></td>`;
+      tbody.appendChild(tr);
+    });
+    tbody.querySelectorAll('[data-del]').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        if(!confirm('حذف هذا السجل؟')) return;
+        entries = entries.filter(e=>e.id!==b.dataset.del);
+        persistEntries();
+        overlay.remove();
+        openStudentProfile(st);
+        renderStudents(); renderLog(); renderStats();
+      });
+    });
+  }
+}
+
+/* ================= LOG ================= */
+function refreshLogStudentFilter(){
+  const sel = document.getElementById('logFilterStudent');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">الكل</option>' + students.map(s=>`<option value="${s.id}">${escapeHtml(s.name)}</option>`).join('');
+  sel.value = cur;
+}
+['logFilterStudent','logFilterType','logFilterFrom','logFilterTo'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', renderLog);
+});
+document.getElementById('logResetFilters').addEventListener('click', ()=>{
+  document.getElementById('logFilterStudent').value='';
+  document.getElementById('logFilterType').value='';
+  document.getElementById('logFilterFrom').value='';
+  document.getElementById('logFilterTo').value='';
+  renderLog();
+});
+
+function renderLog(){
+  refreshLogStudentFilter();
+  const fStudent = document.getElementById('logFilterStudent').value;
+  const fType = document.getElementById('logFilterType').value;
+  const fFrom = document.getElementById('logFilterFrom').value;
+  const fTo = document.getElementById('logFilterTo').value;
+
+  let rows = entries.slice();
+  if(fStudent) rows = rows.filter(e=>e.studentId===fStudent);
+  if(fType==='cumulative') rows = rows.filter(e=>e.dayType==='cumulative');
+  else if(fType==='hifz') rows = rows.filter(e=>e.dayType==='daily' && e.sessionType==='hifz');
+  else if(fType==='murajaa') rows = rows.filter(e=>e.dayType==='daily' && e.sessionType==='murajaa');
+  if(fFrom) rows = rows.filter(e=>e.date>=fFrom);
+  if(fTo) rows = rows.filter(e=>e.date<=fTo);
+  rows.sort((a,b)=>b.date.localeCompare(a.date));
+
+  const tbody = document.querySelector('#logTable tbody');
+  tbody.innerHTML='';
+  if(rows.length===0){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--ink-soft); padding:24px;">لا توجد سجلات مطابقة</td></tr>`;
+    return;
+  }
+  rows.forEach(en=>{
+    const st = students.find(s=>s.id===en.studentId);
+    const details = en.dayType==='daily' ? `${escapeHtml(en.heard||'—')} (${escapeHtml(en.from||'')} → ${escapeHtml(en.to||'')})` : escapeHtml(en.cumulativeReview||'—');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${formatArabicDate(en.date)}</td>
+      <td>${dayNameOf(en.date)}</td>
+      <td>${escapeHtml(st?st.name:'—')}</td>
+      <td><span class="pill ${sessionPillClass(en)}">${sessionLabel(en)}</span></td>
+      <td>${details}</td>
+      <td>${(en.dayType==='daily' && en.sessionType==='hifz') ? `<span class="pill ${en.reviewed?'rev-yes':'rev-no'}">${en.reviewed?'نعم':'لا'}</span>` : '—'}</td>
+      <td>${escapeHtml(en.notes||'—')}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
+  const header = ['التاريخ','اليوم','الطالبة','النوع','التفاصيل','راجعت','ملاحظات'];
+  const lines = [header.join(',')];
+  entries.slice().sort((a,b)=>a.date.localeCompare(b.date)).forEach(en=>{
+    const st = students.find(s=>s.id===en.studentId);
+    const details = en.dayType==='daily' ? `${en.heard||''} (${en.from||''} → ${en.to||''})` : (en.cumulativeReview||'');
+    const row = [en.date, dayNameOf(en.date), st?st.name:'', sessionLabel(en), details, (en.dayType==='daily' && en.sessionType==='hifz')?(en.reviewed?'نعم':'لا'):'', en.notes||''];
+    lines.push(row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+  });
+  const blob = new Blob(['\uFEFF'+lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `سجل-الحلقة-${todayISO()}.csv`;
+  a.click();
+});
+
+/* ================= STATS ================= */
+let chartByStudent=null, chartByDay=null;
+function renderStats(){
+  const totalStudents = students.length;
+  const totalSessions = entries.length;
+  const cumulativeSessions = entries.filter(e=>e.dayType==='cumulative').length;
+  const hifzEntries = entries.filter(e=>e.dayType==='daily' && e.sessionType==='hifz');
+  const murajaaEntries = entries.filter(e=>e.dayType==='daily' && e.sessionType==='murajaa');
+  const reviewedCount = hifzEntries.filter(e=>e.reviewed).length;
+  const reviewRate = hifzEntries.length ? Math.round((reviewedCount/hifzEntries.length)*100) : 0;
+
+  document.getElementById('statCards').innerHTML = `
+    <div class="stat-card"><div class="num">${totalStudents}</div><div class="lbl">عدد الطالبات</div></div>
+    <div class="stat-card"><div class="num">${totalSessions}</div><div class="lbl">إجمالي الجلسات المسجّلة</div></div>
+    <div class="stat-card"><div class="num">${hifzEntries.length}</div><div class="lbl">جلسات حفظ جديد</div></div>
+    <div class="stat-card"><div class="num">${murajaaEntries.length}</div><div class="lbl">جلسات مراجعة عادية</div></div>
+    <div class="stat-card"><div class="num">${cumulativeSessions}</div><div class="lbl">جلسات المراجعة التراكمية</div></div>
+    <div class="stat-card"><div class="num">${reviewRate}%</div><div class="lbl">نسبة مراجعة المحفوظ السابق (بيوم الحفظ)</div></div>
+  `;
+
+  const byStudentLabels = students.map(s=>s.name);
+  const byStudentData = students.map(s=>entries.filter(e=>e.studentId===s.id).length);
+  const byDayLabels = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس'];
+  const byDayData = byDayLabels.map(d=>entries.filter(e=>dayNameOf(e.date)===d).length);
+
+  if(typeof Chart==='undefined') return;
+  const goldColor = '#c9a227', greenColor='#2b6350';
+
+  if(chartByStudent) chartByStudent.destroy();
+  chartByStudent = new Chart(document.getElementById('chartByStudent'), {
+    type:'bar',
+    data:{ labels: byStudentLabels.length?byStudentLabels:['لا يوجد بيانات'], datasets:[{ data: byStudentData.length?byStudentData:[0], backgroundColor: greenColor, borderRadius:6 }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ y:{beginAtZero:true, ticks:{precision:0}} } }
+  });
+
+  if(chartByDay) chartByDay.destroy();
+  chartByDay = new Chart(document.getElementById('chartByDay'), {
+    type:'bar',
+    data:{ labels: byDayLabels, datasets:[{ data: byDayData, backgroundColor: goldColor, borderRadius:6 }] },
+    options:{ plugins:{legend:{display:false}}, scales:{ y:{beginAtZero:true, ticks:{precision:0}} } }
+  });
+}
+
+/* ================= MOTIVATION ================= */
+const MOTIVATION_QUOTES = [
+  'من دلّ على خير فله مثل أجر فاعله، وأنتِ اليوم تدلّين طالباتك على سنة نبيهنّ ﷺ.',
+  'كل حرف تُتقنه طالبة على يديكِ هو أثر تكتبينه في صحيفتك، فاحتسبي كل لحظة صبر معها.',
+  'تعليم الحديث ومتابعته من أشرف الأعمال، فلا يستوحشنّكِ طول الطريق مع طالباتك.',
+  'صبركِ اليوم على المراجعة والتكرار هو بذرة حفظٍ راسخ ستقطفن ثمرته لاحقاً.',
+  'كل خانة تملئينها في هذا السجل هي شاهدة على جهدٍ مبذول في سبيل نشر السنة.',
+  'لستِ فقط تُسمّعين حديثاً، بل تبنين علاقة الطالبة بكلام نبيها ﷺ، فأحسني الظن بثمرة هذا الجهد.',
+  'التعب الذي تجدينه في المتابعة اليومية هو نفسه الأجر الذي يُكتب لكِ في ميزانك.',
+  'خير الأعمال أدومها ولو قلّ، فمتابعتك اليومية الهادئة أنفع من اندفاع لا يدوم.',
+  'كوني رفيقة صبورة لكل طالبة، فبعضهن يحتجن وقتاً أطول ليثبت الحفظ، وهذا لا يقلّل من قيمتهن.',
+  'كل يوم خميسٍ تراجعن فيه ما سبق هو تثبيتٌ لعلمٍ سيبقى معهنّ بإذن الله بعد سنوات.',
+  'لا تحتقري تشجيعاً بسيطاً تقولينه لطالبة، فقد يكون سبباً في استمرارها وثباتها.',
+  'أنتِ اليوم حلقة وصلٍ بين سنة النبي ﷺ وقلوب طالبات صغيرات، فما أعظم هذا الشرف!',
+  'اجعلي كل تسجيلٍ في هذا الموقع دعاءً صامتاً بأن يبارك الله في حفظ طالباتك وفهمهنّ.',
+  'الانضباط في المتابعة اليومية هو سرّ استمرار الحلقات الناجحة، فاستمري ولو ببطء.',
+  'رضا الله وحده يكفي أجراً لما تبذلينه من وقتٍ وجهدٍ في هذه الحلقة.'
+];
+let lastQuoteIdx=-1;
+function showRandomQuote(){
+  let idx;
+  do{ idx = Math.floor(Math.random()*MOTIVATION_QUOTES.length); } while(idx===lastQuoteIdx && MOTIVATION_QUOTES.length>1);
+  lastQuoteIdx = idx;
+  document.getElementById('motivationQuote').textContent = MOTIVATION_QUOTES[idx];
+}
+document.getElementById('nextQuoteBtn').addEventListener('click', showRandomQuote);
+function renderMotivationGrid(){
+  const grid = document.getElementById('motivationGrid');
+  grid.innerHTML = MOTIVATION_QUOTES.map(q=>`<div class="motivation-card">${escapeHtml(q)}</div>`).join('');
+}
+
+/* ================= PDF EXPORT ================= */
+/* Each PDF page is built as HTML, rendered to an image by the browser (so Arabic text is always correct),
+   then added to the PDF. Long tables are split across pages with the header row repeated. */
+const PDF_PAD = 38;       // page padding in px (~10mm)
+const PDF_FOOT = 30;      // space reserved for the footer line
+const PDF_TBL_GAP = 12;   // margin under each table chunk
+const PDF_GEOM = {
+  portrait:  { w:794,  h:1123, mmW:210, mmH:297, orient:'portrait'  },
+  landscape: { w:1123, h:794,  mmW:297, mmH:210, orient:'landscape' }
+};
+let pdfBusy = false;
+
+function pdfSafeName(s){ return String(s).replace(/[\\/:*?"<>|]+/g,'-').trim(); }
+function pdfToday(){
+  const n = new Date();
+  return `${DAY_NAMES[n.getDay()]} — ${n.toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})}`;
+}
+const pdfHtml = (html, keep) => ({ kind:'html', html, keep: !!keep });
+
+function pdfBigHead(title, subtitle){
+  return `<div class="pdf-block pdf-head">
+    <div class="pdf-head-top"><span class="pdf-circle">${escapeHtml(settings.circleName||'حلقة حفظ السنة')}</span><span>${pdfToday()}</span></div>
+    <h1>${escapeHtml(title)}</h1>
+    ${subtitle ? `<div class="pdf-sub">${escapeHtml(subtitle)}</div>` : ''}
+  </div>`;
+}
+function pdfMiniHead(title){
+  return `<div class="pdf-block pdf-mini"><span>${escapeHtml(settings.circleName||'حلقة حفظ السنة')}</span><span>${escapeHtml(title)}</span></div>`;
+}
+function pdfH2(text){ return pdfHtml(`<div class="pdf-block"><div class="pdf-h2">${escapeHtml(text)}</div></div>`, true); }
+function pdfTiles(items){
+  return pdfHtml(`<div class="pdf-block"><div class="pdf-tiles">${
+    items.map(([v,l])=>`<div class="pdf-tile"><b>${v}</b><span>${escapeHtml(l)}</span></div>`).join('')
+  }</div></div>`);
+}
+
+/* ---- entry helpers ---- */
+function pdfTypeTag(en){
+  const cls = en.dayType==='cumulative' ? 'cum' : (en.sessionType==='hifz' ? 'hifz' : 'mur');
+  return `<span class="pdf-tag ${cls}">${sessionLabel(en)}</span>`;
+}
+function pdfDetails(en){
+  if(en.dayType==='cumulative') return escapeHtml(en.cumulativeReview||'—');
+  const range = (en.from||en.to) ? `<div class="pdf-range">من ${escapeHtml(en.from||'—')} إلى ${escapeHtml(en.to||'—')}</div>` : '';
+  return `${escapeHtml(en.heard||'—')}${range}`;
+}
+function pdfReviewed(en){
+  return (en.dayType==='daily' && en.sessionType==='hifz') ? (en.reviewed ? 'نعم' : 'لا') : '—';
+}
+function pdfTrackText(st){
+  return st.track==='murajaa' ? 'مراجعة فقط' : ('حفظ' + (st.hifzDay ? ` (${st.hifzDay})` : ''));
+}
+function pdfEntryRows(list, showStudent){
+  return list.map(en=>{
+    const st = students.find(s=>s.id===en.studentId);
+    return `<td>${formatArabicDate(en.date)}</td><td>${dayNameOf(en.date)}</td>`
+      + (showStudent ? `<td>${escapeHtml(st?st.name:'—')}</td>` : '')
+      + `<td>${pdfTypeTag(en)}</td><td>${pdfDetails(en)}</td><td>${pdfReviewed(en)}</td><td>${escapeHtml(en.notes||'—')}</td>`;
+  });
+}
+function pdfEntriesTable(list, showStudent){
+  return showStudent
+    ? { kind:'table', cols:[11,8,14,10,28,7,22], head:['التاريخ','اليوم','الطالبة','النوع','التفاصيل','راجعت','ملاحظات'], rows:pdfEntryRows(list,true) }
+    : { kind:'table', cols:[14,9,11,30,8,28],    head:['التاريخ','اليوم','النوع','التفاصيل','راجعت','ملاحظات'],          rows:pdfEntryRows(list,false) };
+}
+function pdfStudentStats(st){
+  const list = entries.filter(e=>e.studentId===st.id);
+  const hifz = list.filter(e=>e.dayType==='daily' && e.sessionType==='hifz');
+  const mur  = list.filter(e=>e.dayType==='daily' && e.sessionType!=='hifz');
+  const cum  = list.filter(e=>e.dayType==='cumulative');
+  const rev  = hifz.filter(e=>e.reviewed).length;
+  return { total:list.length, hifz:hifz.length, mur:mur.length, cum:cum.length,
+           rate: hifz.length ? Math.round(rev/hifz.length*100) : null };
+}
+function pdfOverallTiles(){
+  const hifz = entries.filter(e=>e.dayType==='daily' && e.sessionType==='hifz');
+  const mur  = entries.filter(e=>e.dayType==='daily' && e.sessionType!=='hifz');
+  const cum  = entries.filter(e=>e.dayType==='cumulative');
+  const rate = hifz.length ? Math.round(hifz.filter(e=>e.reviewed).length/hifz.length*100) + '%' : '—';
+  return pdfTiles([
+    [students.length,'عدد الطالبات'], [entries.length,'إجمالي الجلسات'], [hifz.length,'جلسات حفظ'],
+    [mur.length,'مراجعة عادية'], [cum.length,'مراجعة تراكمية'], [rate,'نسبة مراجعة المحفوظ']
+  ]);
+}
+function pdfSummaryTable(){
+  return { kind:'table', cols:[20,17,17,9,9,10,18],
+    head:['الطالبة','المجلد','المسار','حفظ','مراجعة','تراكمية','نسبة المراجعة'],
+    rows: students.map(st=>{
+      const s = pdfStudentStats(st);
+      return `<td>${escapeHtml(st.name)}</td><td>${escapeHtml(st.volume||'—')}</td><td>${escapeHtml(pdfTrackText(st))}</td>`
+        + `<td>${s.hifz}</td><td>${s.mur}</td><td>${s.cum}</td><td>${s.rate===null?'—':s.rate+'%'}</td>`;
+    }) };
+}
+
+/* ---- table + pagination ---- */
+function pdfTableHtml(sec, rows){
+  return `<table class="pdf-table"><colgroup>${sec.cols.map(c=>`<col style="width:${c}%">`).join('')}</colgroup>`
+    + `<thead><tr>${sec.head.map(h=>`<th>${h}</th>`).join('')}</tr></thead>`
+    + `<tbody>${rows.map(r=>`<tr>${r}</tr>`).join('')}</tbody></table>`;
+}
+function pdfPaginate(sections, geom, miniHtml){
+  const contentW = geom.w - 2*PDF_PAD;
+  const contentH = geom.h - 2*PDF_PAD - PDF_FOOT;
+  const m = document.createElement('div');
+  m.className = 'pdf-report';
+  m.style.cssText = `position:fixed; left:-99999px; top:0; width:${contentW}px; visibility:hidden;`;
+  document.body.appendChild(m);
+  const heightOf = html => { m.innerHTML = html; return m.getBoundingClientRect().height; };
+
+  const miniH = heightOf(miniHtml);
+  const pages = [];
+  let cur = [], used = 0, keepIdx = -1, keepH = 0;
+  const isEmpty = () => used <= (pages.length ? miniH : 0) + 0.5;
+  const nextPage = () => { pages.push(cur); cur = [miniHtml]; used = miniH; keepIdx = -1; };
+  const breakKeepingHeading = () => {      // move a trailing heading to the new page with its table
+    let carry = null;
+    if(keepIdx >= 0 && keepIdx === cur.length-1){ carry = cur.pop(); used -= keepH; }
+    nextPage();
+    if(carry){ cur.push(carry); used += keepH; keepIdx = cur.length-1; }
+  };
+
+  try{
+    for(const sec of sections){
+      if(sec.kind==='html'){
+        const h = heightOf(sec.html);
+        if(used + h > contentH && !isEmpty()) nextPage();
+        cur.push(sec.html); used += h;
+        if(sec.keep){ keepIdx = cur.length-1; keepH = h; } else keepIdx = -1;
+      } else {
+        m.innerHTML = pdfTableHtml(sec, sec.rows);
+        const headH = m.querySelector('thead').getBoundingClientRect().height;
+        const rowH = Array.from(m.querySelectorAll('tbody tr')).map(tr=>tr.getBoundingClientRect().height);
+        let i = 0, first = true;
+        while(i < sec.rows.length){
+          if(used + headH + rowH[i] > contentH && !isEmpty()){ first ? breakKeepingHeading() : nextPage(); }
+          first = false;
+          let h = headH; const chunk = [];
+          while(i < sec.rows.length && used + h + rowH[i] <= contentH){ h += rowH[i]; chunk.push(sec.rows[i]); i++; }
+          if(!chunk.length){ chunk.push(sec.rows[i]); h += rowH[i]; i++; }   // row taller than a page: force it
+          cur.push(pdfTableHtml(sec, chunk)); used += h + PDF_TBL_GAP; keepIdx = -1;
+          if(i < sec.rows.length) nextPage();
+        }
+      }
+    }
+    pages.push(cur);
+  } finally { m.remove(); }
+  return pages;
+}
+
+async function pdfRenderPages(pages, geom, filename){
+  const { jsPDF } = window.jspdf;
+  const contentW = geom.w - 2*PDF_PAD;
+  const pdf = new jsPDF({ orientation:geom.orient, unit:'mm', format:'a4', compress:true });
+  const holder = document.createElement('div');
+  holder.style.cssText = 'position:fixed; left:-99999px; top:0;';
+  document.body.appendChild(holder);
+  try{
+    for(let i=0; i<pages.length; i++){
+      toast(`جارٍ إنشاء الصفحة ${i+1} من ${pages.length}…`);
+      const el = document.createElement('div');
+      el.className = 'pdf-page';
+      el.style.cssText = `width:${geom.w}px; height:${geom.h}px;`;
+      el.innerHTML = `<div class="pdf-report" style="width:${contentW}px;">${pages[i].join('')}</div>`
+        + `<div class="pdf-foot-line"><span>جعله الله في ميزان حسناتكِ</span><span>صفحة ${i+1} من ${pages.length}</span></div>`;
+      holder.innerHTML = '';
+      holder.appendChild(el);
+      await Promise.all(Array.from(el.querySelectorAll('img')).map(im => im.decode ? im.decode().catch(()=>{}) : Promise.resolve()));
+      const canvas = await html2canvas(el, { scale:2, backgroundColor:'#ffffff', useCORS:true, logging:false });
+      if(i>0) pdf.addPage('a4', geom.orient);
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.8), 'JPEG', 0, 0, geom.mmW, geom.mmH, undefined, 'FAST');
+    }
+    pdf.save(filename);
+  } finally { holder.remove(); }
+}
+
+async function exportPdf({title, subtitle, sections, filename, landscape}){
+  if(typeof html2canvas==='undefined' || !window.jspdf){
+    toast('تعذّر تحميل أداة PDF — تأكدي من اتصال الإنترنت ثم أعيدي المحاولة');
+    return;
+  }
+  if(pdfBusy) return;
+  pdfBusy = true;
+  toast('جارٍ تجهيز ملف PDF…');
+  try{
+    if(document.fonts && document.fonts.load){
+      const sample = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي 0123 abc';
+      await Promise.all([
+        document.fonts.load('400 13px Tajawal', sample), document.fonts.load('500 13px Tajawal', sample),
+        document.fonts.load('700 13px Tajawal', sample), document.fonts.load('800 13px Tajawal', sample),
+        document.fonts.load('700 26px "Aref Ruqaa"', sample)
+      ]).catch(()=>{});
+    }
+    const geom = landscape ? PDF_GEOM.landscape : PDF_GEOM.portrait;
+    const pages = pdfPaginate([pdfHtml(pdfBigHead(title, subtitle)), ...sections], geom, pdfMiniHead(title));
+    await pdfRenderPages(pages, geom, filename);
+    toast('تم تنزيل ملف PDF ✓');
+  }catch(err){
+    console.error(err);
+    toast('حدث خطأ أثناء إنشاء الـ PDF، حاولي مرة أخرى');
+  }finally{ pdfBusy = false; }
+}
+
+/* ---- the five reports ---- */
+function exportDailyPdf(){
+  const iso = currentHomeDate();
+  const type = dayTypeOf(iso);
+  if(type==='off'){ toast('لا يوجد دوام في هذا اليوم'); return; }
+  if(students.length===0){ toast('لا يوجد طالبات بعد'); return; }
+  const draft = drafts[iso] || {};
+  let filled = 0;
+  const rows = students.map(st=>{
+    const d = draft[st.id] || entries.find(e=>e.studentId===st.id && e.date===iso) || {};
+    const has = type==='daily' ? (d.heard||d.from||d.to||d.notes||d.reviewed) : (d.cumulativeReview||d.notes);
+    const en = { dayType:type, sessionType: type==='daily' ? sessionTypeFor(st, iso) : null,
+                 heard:d.heard, from:d.from, to:d.to, reviewed:d.reviewed, cumulativeReview:d.cumulativeReview, notes:d.notes };
+    const lead = `<td>${escapeHtml(st.name)}</td><td>${escapeHtml(st.volume||'—')}</td><td>${pdfTypeTag(en)}</td>`;
+    if(!has) return lead + `<td colspan="3" class="pdf-muted">لم يُسجَّل شيء</td>`;
+    filled++;
+    return lead + `<td>${pdfDetails(en)}</td><td>${pdfReviewed(en)}</td><td>${escapeHtml(d.notes||'—')}</td>`;
+  });
+  const kind = type==='daily' ? 'يوم تسميع' : 'يوم مراجعة تراكمية';
+  exportPdf({
+    title: 'تقرير اليوم',
+    subtitle: `${dayNameOf(iso)} ${formatArabicDate(iso)} • ${kind} • سُجّل ${filled} من ${students.length} طالبة`,
+    sections: [{ kind:'table', cols:[17,15,12,28,8,20], head:['الطالبة','المجلد','النوع','التفاصيل','راجعت','ملاحظات'], rows }],
+    filename: `تقرير-اليوم-${iso}.pdf`, landscape:false
+  });
+}
+
+function exportStudentPdf(st){
+  const list = entries.filter(e=>e.studentId===st.id).sort((a,b)=>b.date.localeCompare(a.date));
+  if(list.length===0){ toast('لا توجد سجلات لهذه الطالبة بعد'); return; }
+  const s = pdfStudentStats(st);
+  exportPdf({
+    title: `ملف الطالبة: ${st.name}`,
+    subtitle: `المجلد: ${st.volume||'—'} • المسار: ${pdfTrackText(st)}`,
+    sections: [
+      pdfTiles([[s.total,'جلسات مسجّلة'],[s.hifz,'جلسات حفظ'],[s.mur,'مراجعة عادية'],[s.cum,'مراجعة تراكمية'],[s.rate===null?'—':s.rate+'%','نسبة مراجعة المحفوظ']]),
+      pdfH2('سجل الجلسات'),
+      pdfEntriesTable(list, false)
+    ],
+    filename: `ملف-${pdfSafeName(st.name)}-${todayISO()}.pdf`, landscape:false
+  });
+}
+
+function getFilteredLogRows(){
+  const fStudent = document.getElementById('logFilterStudent').value;
+  const fType = document.getElementById('logFilterType').value;
+  const fFrom = document.getElementById('logFilterFrom').value;
+  const fTo = document.getElementById('logFilterTo').value;
+  let rows = entries.slice();
+  if(fStudent) rows = rows.filter(e=>e.studentId===fStudent);
+  if(fType==='cumulative') rows = rows.filter(e=>e.dayType==='cumulative');
+  else if(fType==='hifz') rows = rows.filter(e=>e.dayType==='daily' && e.sessionType==='hifz');
+  else if(fType==='murajaa') rows = rows.filter(e=>e.dayType==='daily' && e.sessionType==='murajaa');
+  if(fFrom) rows = rows.filter(e=>e.date>=fFrom);
+  if(fTo) rows = rows.filter(e=>e.date<=fTo);
+  return rows.sort((a,b)=>b.date.localeCompare(a.date));
+}
+function exportLogPdf(){
+  const rows = getFilteredLogRows();
+  if(rows.length===0){ toast('لا توجد سجلات لتصديرها'); return; }
+  const sSel = document.getElementById('logFilterStudent'), tSel = document.getElementById('logFilterType');
+  const parts = [];
+  if(sSel.value) parts.push('الطالبة: ' + sSel.options[sSel.selectedIndex].text);
+  if(tSel.value) parts.push('النوع: ' + tSel.options[tSel.selectedIndex].text);
+  const f = document.getElementById('logFilterFrom').value, t = document.getElementById('logFilterTo').value;
+  if(f) parts.push('من ' + formatArabicDate(f));
+  if(t) parts.push('إلى ' + formatArabicDate(t));
+  parts.push(rows.length + ' سجل');
+  exportPdf({
+    title: 'سجل الحلقة', subtitle: parts.join(' • '),
+    sections: [pdfEntriesTable(rows, true)],
+    filename: `سجل-الحلقة-${todayISO()}.pdf`, landscape:true
+  });
+}
+
+function exportStatsPdf(){
+  renderStats();
+  [chartByStudent, chartByDay].forEach(c=>{ if(c){ c.stop(); c.options.animation = false; c.update('none'); c.draw(); } });
+  const sections = [pdfOverallTiles()];
+  [['chartByStudent','عدد الجلسات لكل طالبة'],['chartByDay','توزيع الجلسات حسب اليوم']].forEach(([id,label])=>{
+    const c = document.getElementById(id);
+    if(typeof Chart!=='undefined' && c && c.width>0 && c.height>0){
+      sections.push(pdfH2(label));
+      sections.push(pdfHtml(`<div class="pdf-block"><img alt="" src="${c.toDataURL('image/png')}" style="width:100%; aspect-ratio:${c.width}/${c.height}; display:block;"></div>`));
+    }
+  });
+  if(students.length){ sections.push(pdfH2('ملخص الطالبات')); sections.push(pdfSummaryTable()); }
+  exportPdf({ title:'إحصائيات الحلقة', subtitle:'', sections, filename:`إحصائيات-الحلقة-${todayISO()}.pdf`, landscape:false });
+}
+
+function exportFullPdf(){
+  if(students.length===0 && entries.length===0){ toast('لا توجد بيانات بعد'); return; }
+  if(entries.length>400 && !confirm(`التقرير كبير (${entries.length} سجل) وقد يستغرق دقيقة أو أكثر. هل تريدين المتابعة؟`)) return;
+  const sections = [pdfOverallTiles()];
+  if(students.length){ sections.push(pdfH2('ملخص الطالبات')); sections.push(pdfSummaryTable()); }
+  if(entries.length){
+    sections.push(pdfH2('السجل الكامل'));
+    sections.push(pdfEntriesTable(entries.slice().sort((a,b)=>b.date.localeCompare(a.date)), true));
+  }
+  exportPdf({
+    title: 'التقرير الشامل للحلقة',
+    subtitle: `${students.length} طالبة • ${entries.length} جلسة مسجّلة`,
+    sections, filename:`التقرير-الشامل-${todayISO()}.pdf`, landscape:true
+  });
+}
+
+document.getElementById('homePdfBtn').addEventListener('click', exportDailyPdf);
+document.getElementById('logPdfBtn').addEventListener('click', exportLogPdf);
+document.getElementById('statsPdfBtn').addEventListener('click', exportStatsPdf);
+document.getElementById('fullPdfBtn').addEventListener('click', exportFullPdf);
+
+/* ================= UTIL ================= */
+function sessionLabel(en){
+  if(en.dayType==='cumulative') return 'مراجعة تراكمية';
+  return en.sessionType==='hifz' ? 'حفظ' : 'مراجعة';
+}
+function sessionPillClass(en){
+  if(en.dayType==='cumulative') return 'type-cumulative';
+  return en.sessionType==='hifz' ? 'type-hifz' : 'type-murajaa';
+}
+function escapeHtml(str){ return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(str){ return escapeHtml(str); }
+function formatArabicDate(iso){
+  const d = dateFromISO(iso);
+  return d.toLocaleDateString('ar-SA', {year:'numeric', month:'short', day:'numeric'});
+}
+
+/* ================= INIT ================= */
+function updateTodayChip(){
+  const now = new Date();
+  document.getElementById('todayChip').textContent = `${DAY_NAMES[now.getDay()]} — ${now.toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'})}`;
+}
+updateTodayChip();
+applySettingsToHeader();
+renderHome();
+renderStudents();
+renderLog();
+renderMotivationGrid();
+showRandomQuote();
+</script>
+</body>
+</html>
